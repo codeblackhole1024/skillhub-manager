@@ -1,7 +1,7 @@
 ---
 name: skillhub-manager
 description: Manage and publish agent skills on SkillHub and ClawHub. Best for developers and operators who need a repeatable workflow to search skills, inspect packages, authenticate securely, and publish local skill folders to a registry.
-version: 1.0.0
+version: 1.0.1
 author: Agent Skill Master
 license: MIT
 metadata:
@@ -21,21 +21,23 @@ No need to write raw HTTP REST requests; SkillHub provides full compatibility wi
 
 ## General Authentication & Environment
 
-All SkillHub actions must point to the target registry. The default is `http://localhost:18081`. 
+All SkillHub actions must point to the intended registry.
 
-Whenever invoking `npx clawhub`, you MUST prefix the execution with the registry location:
-`CLAWHUB_REGISTRY=http://localhost:18081 npx clawhub <command>`
+Use the default clawhub CLI target when the user does not specify a custom registry. Only set `CLAWHUB_REGISTRY` or pass `--registry <url>` when targeting a non-default or self-hosted SkillHub instance.
+
+Examples:
+- default registry: `npx clawhub <command>`
+- custom registry: `CLAWHUB_REGISTRY=https://your-registry.example npx clawhub <command>`
 
 **Is Login Required?**
-- Viewing public skills: No login necessary.
-- Publishing or interacting with private/team spaces: **Login Required!**
+- Viewing public skills: usually no login required.
+- Publishing or interacting with private/team spaces: login required.
 
 *If you need to login before publishing:*
-If the user provides an API_TOKEN, pass it like this:
-`CLAWHUB_REGISTRY=http://localhost:18081 npx clawhub login --token <TOKEN>`
-If the user has pre-set the `$SKILLHUB_API_TOKEN` environment variable, you can use:
-`CLAWHUB_REGISTRY=http://localhost:18081 npx clawhub login --token $SKILLHUB_API_TOKEN`
-If no token is provided, ask the user for their API token before proceeding.
+- explicit token: `npx clawhub login --token <TOKEN>`
+- custom registry plus token: `CLAWHUB_REGISTRY=https://your-registry.example npx clawhub login --token <TOKEN>`
+- if the environment already provides `SKILLHUB_API_TOKEN`, `CLAWHUB_API_TOKEN`, or `CLAWHUB_TOKEN`, validate first with `npx clawhub whoami`
+- if no working token is available, ask the user for one before proceeding
 
 ## Commands
 
