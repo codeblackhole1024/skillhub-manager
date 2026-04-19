@@ -2,30 +2,43 @@
 
 The following are standard operational workflows for managing skills in SkillHub compatible registries.
 
-Use the default clawhub registry unless the user explicitly provides a custom registry URL. For self-hosted registries, prepend `CLAWHUB_REGISTRY=<url>` to the commands below.
+Before running any workflow below, ask the user for the SkillHub address they want to use. Do not assume a registry in advance.
+
+After the user provides the address:
+- if the user confirms the default hosted registry, use plain `npx clawhub ...`
+- if the user provides a custom or self-hosted SkillHub address, prepend `CLAWHUB_REGISTRY=<url>` to every command below
+
+Mandatory preflight interaction:
+1. Ask for the SkillHub address.
+2. Wait for the reply.
+3. Repeat the address back in a confirmation message.
+4. State the exact command style you will use next.
+5. Only then execute the command.
 
 ## 1. Publishing a Skill (Submit / Upload)
 When asked to submit or publish a skill package or directory to SkillHub, use the `publish` command.
 
 1. Ensure the target skill codebase is prepared inside a local folder such as `./my-skill`.
-2. Validate whether you already have a working token:
+2. Ask the user which SkillHub address to use and wait for the answer.
+3. Repeat the address back and confirm the exact command style you will use.
+4. Validate whether you already have a working token:
    ```bash
    npx clawhub whoami
    ```
-3. If authentication is missing, log in with an API token:
+5. If authentication is missing, log in with an API token:
    ```bash
    npx clawhub login --token <TOKEN>
    ```
-4. Run the publishing command:
+6. Run the publishing command:
    ```bash
    # Usage: npx clawhub publish <path> --slug <slug> --name <Title> --version <SemVer>
    npx clawhub publish ./my-skill --slug my-skill --name "My Awesome Skill" --version 1.0.0
    ```
-5. When targeting a custom or self-hosted registry, add the registry override:
+7. When targeting a custom or self-hosted registry, add the registry override:
    ```bash
    CLAWHUB_REGISTRY=https://your-registry.example npx clawhub publish ./my-skill --slug my-skill --name "My Awesome Skill" --version 1.0.0
    ```
-6. Verify the result with:
+8. Verify the result with:
    ```bash
    npx clawhub inspect my-skill
    ```
@@ -50,7 +63,9 @@ npx clawhub search <query>
 ```
 
 ## 4. Practical Notes
+- Always ask for the SkillHub address before login, search, inspect, explore, or publish.
+- Always repeat the address back to the user before executing the first registry command.
 - Use explicit `--slug`, `--name`, `--version`, and `--tags` values when publishing so the release is reproducible.
 - Keep `README.md` and `SKILL.md` in sync before publishing.
 - Prefer `npx clawhub whoami` before any publish attempt so you can fail fast on expired tokens.
-- Use `CLAWHUB_REGISTRY` only when the user actually wants a non-default registry.
+- Use `CLAWHUB_REGISTRY` only after the user has provided a non-default registry.
